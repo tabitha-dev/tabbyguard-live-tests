@@ -11,7 +11,7 @@ jobs:
   tabbyguard:
     name: Test ${{ matrix.name }}
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
 
     strategy:
       fail-fast: false
@@ -27,11 +27,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Run released TabbyGuard
+      - name: Run TabbyGuard V3 release candidate
         id: tabbyguard
-        uses: tabitha-dev/TabbyGuard@v2
+        uses: tabitha-dev/TabbyGuard@979ef67a10a154c2a609f5a9b02e6768002b2dd7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           preview-url: ${{ matrix.url }}
@@ -39,6 +39,7 @@ jobs:
           fail-on-severity: none
           post-comment: "false"
           upload-artifacts: "true"
+          screenshot-mode: all
 
       - name: Show TabbyGuard result
         if: always()
@@ -52,5 +53,5 @@ jobs:
           echo "High: ${{ steps.tabbyguard.outputs.high-count }}"
           echo "Medium: ${{ steps.tabbyguard.outputs.medium-count }}"
           echo "Low: ${{ steps.tabbyguard.outputs.low-count }}"
-          echo "Run summary: ${{ steps.tabbyguard.outputs.run-summary }}"
-          echo "Evidence path: ${{ steps.tabbyguard.outputs.evidence-path }}"
+          echo "Report path: ${{ steps.tabbyguard.outputs.report-path }}"
+          echo "Artifact URL: ${{ steps.tabbyguard.outputs.artifact-url }}"
