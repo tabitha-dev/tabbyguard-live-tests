@@ -1,8 +1,56 @@
-.github/
-   workflows/
-      tabbyguard.yml
-README.md
-TEST_TRIGGER.md
-gitignore.txt
-install-tabbyguard-test.cmd
-tabbyguard.yml
+name: TabbyGuard Live Website Test
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  tabbyguard:
+    name: Test ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Example
+            url: https://example.com/
+            routes: /
+
+          - name: The Internet
+            url: https://the-internet.herokuapp.com/
+            routes: /
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run released TabbyGuard
+        id: tabbyguard
+        uses: tabitha-dev/TabbyGuard@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          preview-url: ${{ matrix.url }}
+          routes: ${{ matrix.routes }}
+          fail-on-severity: none
+          post-comment: "false"
+          upload-artifacts: "true"
+
+      - name: Show TabbyGuard result
+        if: always()
+        shell: bash
+        run: |
+          echo "Website: ${{ matrix.name }}"
+          echo "URL: ${{ matrix.url }}"
+          echo "Result: ${{ steps.tabbyguard.outputs.result }}"
+          echo "Findings: ${{ steps.tabbyguard.outputs.findings-count }}"
+          echo "Critical: ${{ steps.tabbyguard.outputs.critical-count }}"
+          echo "High: ${{ steps.tabbyguard.outputs.high-count }}"
+          echo "Medium: ${{ steps.tabbyguard.outputs.medium-count }}"
+          echo "Low: ${{ steps.tabbyguard.outputs.low-count }}"
+          echo "Run summary: ${{ steps.tabbyguard.outputs.run-summary }}"
+          echo "Evidence path: ${{ steps.tabbyguard.outputs.evidence-path }}"
