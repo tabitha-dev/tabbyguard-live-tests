@@ -1,1 +1,8 @@
-
+.github/
+   workflows/
+      tabbyguard.yml
+README.md
+TEST_TRIGGER.md
+gitignore.txt
+install-tabbyguard-test.cmd
+tabbyguard.yml
