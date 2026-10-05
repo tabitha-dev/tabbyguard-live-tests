@@ -31,7 +31,7 @@ jobs:
 
       - name: Run TabbyGuard V3 release candidate
         id: tabbyguard
-        uses: tabitha-dev/TabbyGuard@d3fb21042be9fb4a3c8d13268d00d13fbc22e2c9
+        uses: tabitha-dev/TabbyGuard@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           preview-url: ${{ matrix.url }}
